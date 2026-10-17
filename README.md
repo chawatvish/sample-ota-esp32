@@ -12,13 +12,12 @@ The source lives in the separate `ESP32_CYD_Demo` PlatformIO project.
 
 ## Board configuration
 
-In the firmware project's `include/secrets.h`:
-
-```c
-#define OTA_MANIFEST_URL "https://raw.githubusercontent.com/chawatvish/sample-ota-esp32/main/manifest.json"
-```
-
+`OTA_MANIFEST_URL` in the firmware project's `include/version.h` points at
+`https://raw.githubusercontent.com/chawatvish/sample-ota-esp32/main/manifest.json`.
 The repo must be **public** (the board cannot authenticate).
+
+The firmware contains **no secrets** — WiFi and other settings are entered on the board's
+`CYD-Setup` portal and stored in flash — so the published binary is safe to share.
 
 ## Releasing an update
 
@@ -33,6 +32,4 @@ few minutes to be visible.
 ## Notes
 - The board only updates when manifest `version` > its built-in `FW_VERSION`.
 - No rollback: a firmware that crashes at boot needs a USB reflash.
-- Do not commit secrets; `firmware.bin` contains the compiled firmware but `include/secrets.h`
-  values (WiFi password etc.) **are compiled into it**. Keep this repo free of real credentials
-  or make sure you are comfortable with them being public.
+- Never publish a build that has credentials compiled in: strings in `firmware.bin` are readable with `strings`.
